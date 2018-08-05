@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,8 +35,10 @@ public class GroceryListFragment extends Fragment
         mAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = GroceryItemActivity.newInstance(getActivity());
-                startActivity(i);
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.list_fragment_container, new GroceryItemFragment()).commit();
+                //Intent i = GroceryItemActivity.newInstance(getActivity());
+                //startActivity(i);
             }
         });
         //GroceryItem.res();

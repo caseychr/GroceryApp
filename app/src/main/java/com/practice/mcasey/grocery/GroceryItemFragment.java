@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -28,15 +29,16 @@ public class GroceryItemFragment extends Fragment {
     private TextView mGroceryLocation;
     private Button mAddButton;
     private GroceryItem mGroceryItem;
+    private Bundle mBundle;
 
     @Override
     public void onResume() {
         super.onResume();
-        if(getActivity().getIntent().getExtras() != null)
+        if(getArguments() != null)
         {
-            mGroceryName.setText(getActivity().getIntent().getStringExtra(ITEM_NAME));
-            mGroceryAmount.setText(getActivity().getIntent().getStringExtra(ITEM_AMOUNT));
-            mGroceryRecurring.setChecked(getActivity().getIntent().getExtras().getBoolean(ITEM_RECURRING));
+            mGroceryName.setText(getArguments().getString(ITEM_NAME));
+            mGroceryAmount.setText(getArguments().getString(ITEM_AMOUNT));
+            mGroceryRecurring.setChecked(getArguments().getBoolean(ITEM_RECURRING));
         }
     }
 
@@ -99,17 +101,20 @@ public class GroceryItemFragment extends Fragment {
         });
 
         mGroceryLocation = view.findViewById(R.id.grocery_location);
-        if(getActivity().getIntent().getExtras() != null)
-            mGroceryLocation.setText(getActivity().getIntent().getStringExtra(LocationFragment.LOCATION));
+        if(getArguments() != null)
+            mGroceryLocation.setText(getArguments().getString(LocationFragment.LOCATION));
         mGroceryItem.setGroceryLocation(mGroceryLocation.getText().toString());
         mGroceryLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = LocationActivity.newInstance(getActivity());
-                i.putExtra(ITEM_NAME, mGroceryName.getText().toString());
-                i.putExtra(ITEM_AMOUNT, mGroceryAmount.getText().toString());
-                i.putExtra(ITEM_RECURRING, mGroceryRecurring.isChecked());
-                startActivity(i);
+                mBundle = new Bundle();
+                mBundle.putString(ITEM_NAME, mGroceryName.getText().toString());
+                mBundle.putString(ITEM_AMOUNT, mGroceryAmount.getText().toString());
+                mBundle.putBoolean(ITEM_RECURRING, mGroceryRecurring.isChecked());
+                Fragment frag = new LocationFragment();
+                frag.setArguments(mBundle);
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.list_fragment_container, frag).commit();
             }
         });
 
@@ -118,8 +123,9 @@ public class GroceryItemFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 GroceryItem.sGroceryItems.add(mGroceryItem);
-                Intent i = GroceryListActivity.newInstance(getActivity());
-                startActivity(i);
+                Fragment frag = new GroceryListFragment();
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.list_fragment_container, frag).commit();
             }
         });
 

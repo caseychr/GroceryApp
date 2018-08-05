@@ -1,6 +1,5 @@
 package com.practice.mcasey.grocery;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -22,6 +21,7 @@ public class LocationFragment extends Fragment
     private RecyclerView mRecyclerView;
     private LocationAdapter mLocationAdapter;
     private List<String> locations = new ArrayList<>();
+    private Bundle mBundle;
 
     private String name;
     private String amount;
@@ -30,9 +30,9 @@ public class LocationFragment extends Fragment
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        name = getActivity().getIntent().getStringExtra(GroceryItemFragment.ITEM_NAME);
-        amount = getActivity().getIntent().getStringExtra(GroceryItemFragment.ITEM_AMOUNT);
-        recurring = getActivity().getIntent().getExtras().getBoolean(GroceryItemFragment.ITEM_RECURRING);
+        name = getArguments().getString(GroceryItemFragment.ITEM_NAME);
+        amount = getArguments().getString(GroceryItemFragment.ITEM_AMOUNT);
+        recurring = getArguments().getBoolean(GroceryItemFragment.ITEM_RECURRING);
     }
 
     @Nullable
@@ -65,12 +65,15 @@ public class LocationFragment extends Fragment
             mLocationTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent i = GroceryItemActivity.newInstance(getActivity());
-                    i.putExtra(GroceryItemFragment.ITEM_NAME, name);
-                    i.putExtra(GroceryItemFragment.ITEM_AMOUNT, amount);
-                    i.putExtra(GroceryItemFragment.ITEM_RECURRING, recurring);
-                    i.putExtra(LOCATION, mLocationTextView.getText().toString());
-                    startActivity(i);
+                    mBundle = new Bundle();
+                    mBundle.putString(GroceryItemFragment.ITEM_NAME, name);
+                    mBundle.putString(GroceryItemFragment.ITEM_AMOUNT, amount);
+                    mBundle.putBoolean(GroceryItemFragment.ITEM_RECURRING, recurring);
+                    mBundle.putString(LOCATION, mLocationTextView.getText().toString());
+                    Fragment frag = new GroceryItemFragment();
+                    frag.setArguments(mBundle);
+                    getActivity().getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.list_fragment_container, frag).commit();
                 }
             });
         }
