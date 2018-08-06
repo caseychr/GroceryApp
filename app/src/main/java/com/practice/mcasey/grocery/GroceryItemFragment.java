@@ -1,11 +1,9 @@
 package com.practice.mcasey.grocery;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -40,6 +38,12 @@ public class GroceryItemFragment extends Fragment {
             mGroceryAmount.setText(getArguments().getString(ITEM_AMOUNT));
             mGroceryRecurring.setChecked(getArguments().getBoolean(ITEM_RECURRING));
         }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        GroceryLab.get(getActivity()).updateGrocery(mGroceryItem);
     }
 
     @Override
@@ -122,7 +126,8 @@ public class GroceryItemFragment extends Fragment {
         mAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                GroceryItem.sGroceryItems.add(mGroceryItem);
+                //GroceryItem.sGroceryItems.add(mGroceryItem);
+                GroceryLab.get(getActivity()).addGrocery(mGroceryItem);
                 Fragment frag = new GroceryListFragment();
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .replace(R.id.list_fragment_container, frag).commit();

@@ -2,16 +2,25 @@ package com.practice.mcasey.grocery;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class GroceryItem {
 
+    private UUID mUUID;
     private String mGroceryName;
     private String mGroceryAmount;
     private String mGroceryLocation;
     private boolean mCompleted;
     private boolean mRecurring;
 
-    public GroceryItem(){}
+    public GroceryItem(){
+        this(UUID.randomUUID());
+    }
+
+    public GroceryItem(UUID id)
+    {
+        mUUID = id;
+    }
 
     public GroceryItem(String groceryName, String groceryAmount, String groceryLocation, boolean completed,
             boolean recurring) {
@@ -20,6 +29,14 @@ public class GroceryItem {
         mGroceryLocation = groceryLocation;
         mCompleted = completed;
         mRecurring = recurring;
+    }
+
+    public UUID getUUID() {
+        return mUUID;
+    }
+
+    public void setUUID(UUID UUID) {
+        mUUID = UUID;
     }
 
     public String getGroceryName() {

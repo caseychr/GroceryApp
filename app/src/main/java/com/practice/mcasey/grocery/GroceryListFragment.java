@@ -1,20 +1,17 @@
 package com.practice.mcasey.grocery;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -37,24 +34,26 @@ public class GroceryListFragment extends Fragment
             public void onClick(View view) {
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .replace(R.id.list_fragment_container, new GroceryItemFragment()).commit();
-                //Intent i = GroceryItemActivity.newInstance(getActivity());
-                //startActivity(i);
             }
         });
-        //GroceryItem.res();
         updateUI();
         return view;
     }
 
     private void updateUI()
     {
-        List<GroceryItem> groceryItems = GroceryItem.sGroceryItems;
+        GroceryLab groceryLab = GroceryLab.get(getActivity());
+        List<GroceryItem> groceryItems = groceryLab.getGroceries();//GroceryItem.sGroceryItems;
         if(mGroceryAdapter == null)
         {
             mGroceryAdapter = new GroceryAdapter(groceryItems);
             mRecyclerView.setAdapter(mGroceryAdapter);
         }
-        mGroceryAdapter.notifyDataSetChanged();
+        else
+        {
+            mGroceryAdapter.setGroceries(groceryItems);
+            mGroceryAdapter.notifyDataSetChanged();
+        }
     }
 
     private class GroceryHolder extends RecyclerView.ViewHolder
@@ -76,7 +75,8 @@ public class GroceryListFragment extends Fragment
             mItemCompleted.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    GroceryItem.sGroceryItems.remove(mGroceryItem);
+                    //GroceryItem.sGroceryItems.remove(mGroceryItem);
+                    GroceryLab.get(getActivity()).deleteGrocery(mGroceryItem);
                     updateUI();
                 }
             });
@@ -114,5 +114,7 @@ public class GroceryListFragment extends Fragment
         public int getItemCount() {
             return mGroceries.size();
         }
+
+        public void setGroceries(List<GroceryItem> groceries){mGroceries = groceries;}
     }
 }
