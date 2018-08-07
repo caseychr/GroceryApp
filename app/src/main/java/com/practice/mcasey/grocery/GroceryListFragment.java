@@ -56,42 +56,7 @@ public class GroceryListFragment extends Fragment
         }
     }
 
-    private class GroceryHolder extends RecyclerView.ViewHolder
-    {
-        private TextView mItemName;
-        private TextView mItemAmount;
-        private TextView mItemLocation;
-        private CheckBox mItemCompleted;
-        private GroceryItem mGroceryItem;
-
-        public GroceryHolder(LayoutInflater layoutInflater, ViewGroup parent)
-        {
-            super(layoutInflater.inflate(R.layout.list_item_grocery, parent, false));
-            mItemName = itemView.findViewById(R.id.item_name);
-            mItemAmount = itemView.findViewById(R.id.item_amount);
-            mItemLocation = itemView.findViewById(R.id.item_location);
-            mItemCompleted = itemView.findViewById(R.id.item_completed);
-
-            mItemCompleted.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    //GroceryItem.sGroceryItems.remove(mGroceryItem);
-                    GroceryLab.get(getActivity()).deleteGrocery(mGroceryItem);
-                    updateUI();
-                }
-            });
-        }
-
-        public void bind(GroceryItem groceryItem)
-        {
-            mGroceryItem = groceryItem;
-            mItemName.setText(mGroceryItem.getGroceryName());
-            mItemAmount.setText("("+mGroceryItem.getGroceryAmount()+")");
-            mItemLocation.setText(mGroceryItem.getGroceryLocation());
-        }
-    }
-
-    private class GroceryAdapter extends RecyclerView.Adapter<GroceryHolder>
+    private class GroceryAdapter extends RecyclerView.Adapter<GroceryAdapter.GroceryHolder>
     {
         private List<GroceryItem> mGroceries;
 
@@ -116,5 +81,40 @@ public class GroceryListFragment extends Fragment
         }
 
         public void setGroceries(List<GroceryItem> groceries){mGroceries = groceries;}
+
+        protected class GroceryHolder extends RecyclerView.ViewHolder
+        {
+            private TextView mItemName;
+            private TextView mItemAmount;
+            private TextView mItemLocation;
+            private CheckBox mItemCompleted;
+            private GroceryItem mGroceryItem;
+
+            public GroceryHolder(LayoutInflater layoutInflater, ViewGroup parent)
+            {
+                super(layoutInflater.inflate(R.layout.list_item_grocery, parent, false));
+                mItemName = itemView.findViewById(R.id.item_name);
+                mItemAmount = itemView.findViewById(R.id.item_amount);
+                mItemLocation = itemView.findViewById(R.id.item_location);
+                mItemCompleted = itemView.findViewById(R.id.item_completed);
+
+                mItemCompleted.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //GroceryItem.sGroceryItems.remove(mGroceryItem);
+                        GroceryLab.get(getActivity()).deleteGrocery(mGroceryItem);
+                        updateUI();
+                    }
+                });
+            }
+
+            public void bind(GroceryItem groceryItem)
+            {
+                mGroceryItem = groceryItem;
+                mItemName.setText(mGroceryItem.getGroceryName());
+                mItemAmount.setText("("+mGroceryItem.getGroceryAmount()+")");
+                mItemLocation.setText(mGroceryItem.getGroceryLocation());
+            }
+        }
     }
 }

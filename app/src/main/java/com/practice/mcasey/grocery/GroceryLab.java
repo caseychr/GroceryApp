@@ -4,8 +4,12 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
@@ -64,6 +68,7 @@ public class GroceryLab {
         }finally {
             cursor.close();
         }
+        Collections.sort(groceryItems, BY_LOCATION);
         return groceryItems;
     }
 
@@ -112,4 +117,11 @@ public class GroceryLab {
         );
         return new GroceryCursorWrapper(cursor);
     }
+
+    private Comparator<GroceryItem> BY_LOCATION = new Comparator<GroceryItem>() {
+        @Override
+        public int compare(GroceryItem t0, GroceryItem t1) {
+            return t0.getGroceryLocation().compareTo(t1.getGroceryLocation());
+        }
+    };
 }
