@@ -22,7 +22,7 @@
             android:layout_gravity="bottom"
             android:backgroundTint="@color/colorPrimary"
             android:textColor="@color/colorAccent"
-            android:text="new"/>
+            android:text="new_rebasing_this!!!"/>
 
         <Button
             android:id="@+id/create_recurring"
